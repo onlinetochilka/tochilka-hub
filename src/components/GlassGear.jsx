@@ -54,7 +54,7 @@ export default function GlassGear() {
   }, [gearPath]);
 
   return (
-    <div className="relative w-[380px] h-[380px] md:w-[480px] md:h-[480px] flex items-center justify-center animate-[float_6s_ease-in-out_infinite]">
+    <div className="relative w-[380px] h-[380px] md:w-[480px] md:h-[480px] flex items-center justify-center">
       
       {/* 1. Precise Geometric Background */}
       <div className="absolute inset-0 flex items-center justify-center opacity-70">
