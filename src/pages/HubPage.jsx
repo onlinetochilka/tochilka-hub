@@ -139,11 +139,6 @@ export default function HubPage() {
       {/* Footer */}
       <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 border-t border-[#002845]/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-[#002845]/40 uppercase tracking-wider">
         <p>© {new Date().getFullYear()} ТОЧИЛКА. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</p>
-        <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
-          <Link to="/privacy" className="hover:text-[#006584] transition-colors">Политика конфиденциальности</Link>
-          <Link to="/terms" className="hover:text-[#006584] transition-colors">Оферта</Link>
-          <Link to="/consent" className="hover:text-[#006584] transition-colors">Согласие ПД</Link>
-        </div>
       </footer>
       
       {/* Custom Keyframes */}
