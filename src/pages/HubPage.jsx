@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, BookOpen, Notebook, Timer, Calculator, PieChart, Sparkles } from "lucide-react";
+import GlassGear from "../components/GlassGear.jsx";
 
 export default function HubPage() {
   const tools = [
@@ -89,15 +90,9 @@ export default function HubPage() {
           </a>
         </div>
         
-        {/* Hero Graphic (Abstract Glass Gear/Cog) */}
-        <div className="flex-1 relative flex justify-center items-center h-[400px] w-full max-w-lg lg:max-w-none perspective-[1000px]">
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/60 to-white/10 backdrop-blur-3xl rounded-[3rem] border border-white/80 shadow-[0_32px_64px_-12px_rgba(0,101,132,0.1)] transform rotate-12 rotate-y-12 rotate-x-12 animate-[float_6s_ease-in-out_infinite] flex items-center justify-center p-12">
-            <Sparkles className="w-full h-full text-[#006584]/20 absolute opacity-50" />
-            <div className="w-32 h-32 rounded-full border-[12px] border-[#B71234]/10 border-t-[#006584]/20 border-r-[#B71234]/20 animate-spin-slow"></div>
-            <div className="absolute w-16 h-16 rounded-full bg-[#006584]/5 backdrop-blur-md border border-white/50 shadow-inner flex items-center justify-center">
-              <div className="w-6 h-6 rounded-full bg-[#B71234]/80"></div>
-            </div>
-          </div>
+        {/* Hero Graphic (Glass Gear Component) */}
+        <div className="flex-1 relative flex justify-center items-center w-full max-w-lg lg:max-w-none">
+          <GlassGear />
         </div>
       </main>
 
@@ -154,15 +149,8 @@ export default function HubPage() {
       {/* Custom Keyframes */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes float {
-          0%, 100% { transform: translateY(0) rotateX(12deg) rotateY(12deg) rotateZ(12deg); }
-          50% { transform: translateY(-20px) rotateX(15deg) rotateY(15deg) rotateZ(10deg); }
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
         }
       `}} />
     </div>
