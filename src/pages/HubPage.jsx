@@ -143,10 +143,6 @@ function Hero() {
   return (
     <section className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-8 pb-20 md:pt-16 md:pb-28 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
       <div className="flex-1 max-w-2xl reveal">
-        <div className="inline-flex items-center gap-2 bg-brand-teal/8 text-brand-teal px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide mb-6">
-          <Sparkles size={14} />
-          Бесплатно для репетиторов
-        </div>
         <h1 className="text-4xl sm:text-5xl lg:text-[58px] leading-[1.12] font-black text-brand-navy mb-6 tracking-tight">
           Все&nbsp;ученики, расписание и&nbsp;финансы&nbsp;—{" "}
           <span className="text-brand-teal">в&nbsp;одном месте</span>
@@ -160,7 +156,7 @@ function Hero() {
             href="https://tutor.tochilka.app?demo=true"
             className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-dark text-white px-8 py-4 rounded-full font-bold text-[15px] tracking-wide transition-all shadow-[0_8px_24px_-6px_rgba(183,18,52,0.5)] hover:shadow-[0_12px_28px_-6px_rgba(183,18,52,0.4)] hover:-translate-y-1"
           >
-            ПОПРОБОВАТЬ БЕСПЛАТНО
+            ПОПРОБОВАТЬ
             <ArrowRight size={18} />
           </a>
         </div>
@@ -358,13 +354,13 @@ function FinalCTA() {
         Готовы навести порядок?
       </h2>
       <p className="text-lg text-brand-navy/55 mb-8 font-medium">
-        Начните бесплатно — регистрация занимает 30 секунд.
+        Регистрация занимает 30 секунд.
       </p>
       <a
         href="https://tutor.tochilka.app"
         className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-dark text-white px-10 py-4.5 rounded-full font-bold text-[15px] tracking-wide transition-all shadow-[0_8px_24px_-6px_rgba(183,18,52,0.5)] hover:shadow-[0_12px_28px_-6px_rgba(183,18,52,0.4)] hover:-translate-y-1"
       >
-        НАЧАТЬ БЕСПЛАТНО
+        НАЧАТЬ
         <ArrowRight size={18} />
       </a>
     </section>
