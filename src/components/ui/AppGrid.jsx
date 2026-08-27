@@ -1,4 +1,4 @@
-import { CalendarDays, BookOpen, Clock, Calculator } from 'lucide-react';
+import { CalendarDays, BookOpen, Clock, Calculator, GraduationCap, FileType, BookOpenCheck, Puzzle, PenLine } from 'lucide-react';
 import AppCard from './AppCard';
 
 const apps = [
@@ -21,6 +21,24 @@ const apps = [
     color: 'bg-brand-crimson',
   },
   {
+    id: 'exams',
+    name: 'Трекер Экзаменов',
+    description: 'Система учета подготовки, результатов и прогресса учеников к экзаменам.',
+    icon: GraduationCap,
+    url: 'https://exams.tochilka.app/',
+    isReady: true,
+    color: 'bg-brand-navy',
+  },
+  {
+    id: 'lines',
+    name: 'Генератор разлиновки',
+    description: 'Инструмент для создания листов в клетку, линейку и других шаблонов.',
+    icon: FileType,
+    url: 'https://lines.tochilka.app/',
+    isReady: true,
+    color: 'bg-emerald-600',
+  },
+  {
     id: 'timer',
     name: 'Умный таймер',
     description: 'Инструмент для контроля времени на занятиях с геймификацией.',
@@ -34,6 +52,33 @@ const apps = [
     name: 'Устный счет',
     description: 'Тренажеры для быстрого счета и математических диктантов.',
     icon: Calculator,
+    url: '#',
+    isReady: false,
+    color: 'bg-gray-400',
+  },
+  {
+    id: 'reading',
+    name: 'Проверка техники чтения',
+    description: 'Инструмент для оценки скорости и выразительности чтения.',
+    icon: BookOpenCheck,
+    url: '#',
+    isReady: false,
+    color: 'bg-gray-400',
+  },
+  {
+    id: 'crosswords',
+    name: 'Генератор кроссвордов',
+    description: 'Создание кроссвордов и филвордов по вашим спискам слов.',
+    icon: Puzzle,
+    url: '#',
+    isReady: false,
+    color: 'bg-gray-400',
+  },
+  {
+    id: 'dictations',
+    name: 'Словарные диктанты',
+    description: 'Интерактивные диктанты для проверки правописания и словарного запаса.',
+    icon: PenLine,
     url: '#',
     isReady: false,
     color: 'bg-gray-400',

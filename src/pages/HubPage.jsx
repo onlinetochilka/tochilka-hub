@@ -29,9 +29,9 @@ function Hero() {
   return (
     <section className="relative w-full max-w-5xl mx-auto px-6 pt-32 pb-20 md:pt-48 md:pb-28 text-center flex flex-col items-center">
       
-      {/* 3D Gear spinning subtly in the background behind the text */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none -z-10 translate-y-[-10%] scale-[1.2] md:scale-100 md:translate-y-[-15%]">
-        <GlassGear />
+      {/* Huge 3D Gear spinning subtly in the background behind the text */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none -z-10 translate-y-[-5%]">
+        <GlassGear className="w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] blur-[1px]" />
       </div>
 
       <div className="reveal relative z-10">

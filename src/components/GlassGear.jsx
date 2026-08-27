@@ -43,7 +43,7 @@ const createGearPath = () => {
   return d;
 };
 
-export default function GlassGear() {
+export default function GlassGear({ className }) {
   const gearPath = useMemo(() => createGearPath(), []);
   
   // SVG Mask that includes a central hole
@@ -54,7 +54,7 @@ export default function GlassGear() {
   }, [gearPath]);
 
   return (
-    <div className="relative w-[380px] h-[380px] md:w-[480px] md:h-[480px] flex items-center justify-center">
+    <div className={`relative flex items-center justify-center ${className || "w-[380px] h-[380px] md:w-[480px] md:h-[480px]"}`}>
       
       {/* 1. Precise Geometric Background */}
       <div className="absolute inset-0 flex items-center justify-center opacity-70">
