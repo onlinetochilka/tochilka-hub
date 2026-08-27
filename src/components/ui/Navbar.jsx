@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
 import { LogOut, UserCircle } from 'lucide-react';
-import pb from '../../utils/pb';
+import api from '../../utils/apiClient';
 import AuthModal from './AuthModal';
 
 export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState(pb.authStore.model);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Подписываемся на изменения авторизации
-    const unsubscribe = pb.authStore.onChange((token, model) => {
-      setUser(model);
-    });
-    return () => unsubscribe();
+    api.get('/auth/me')
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
   }, []);
 
-  const handleLogout = () => {
-    pb.authStore.clear();
+  const handleLogout = async () => {
+    await api.post('/auth/logout').catch(() => {});
+    setUser(null);
   };
 
   return (
@@ -66,7 +65,11 @@ export default function Navbar() {
       <AuthModal 
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
-        onLoginSuccess={() => {}} 
+        onLoginSuccess={() => {
+          api.get('/auth/me')
+            .then((data) => setUser(data.user))
+            .catch(() => {});
+        }}
       />
     </>
   );

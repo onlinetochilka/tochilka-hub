@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Mail, Lock } from 'lucide-react';
-import pb from '../../utils/pb';
+import api from '../../utils/apiClient';
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,14 +18,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
     try {
       if (isLogin) {
-        await pb.collection('users').authWithPassword(email, password);
+        await api.post('/auth/login', { email, password });
       } else {
-        await pb.collection('users').create({
-          email,
-          password,
-          passwordConfirm: password,
-        });
-        await pb.collection('users').authWithPassword(email, password);
+        await api.post('/auth/register', { email, password, passwordConfirm: password });
       }
       onLoginSuccess();
       onClose();
@@ -100,7 +95,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
           {isLogin ? 'Нет аккаунта? ' : 'Уже есть аккаунт? '}
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-brand-teal hover:underline font-bold"
+            disabled={loading}
+            className="text-brand-teal hover:underline font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLogin ? 'Зарегистрироваться' : 'Войти'}
           </button>

@@ -1,5 +1,5 @@
 /* ─── Google Font ─── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+/* Удалили импорт Inter из CSS, так как мы подключили его в HTML вместе с Great Vibes */
 
 @import "tailwindcss";
 
@@ -9,9 +9,10 @@
   --color-brand-teal: #006584;
   --color-brand-crimson: #B71234;
   --color-brand-crimson-dark: #9a0f2b;
-  --color-bg-page: #f2f5f8;
+  --color-bg-page: #f5f7f9;
   --color-bg-card: #ffffff;
   --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-family-cursive: 'Great Vibes', cursive;
 }
 
 /* ─── Base ─── */
@@ -23,7 +24,12 @@
     @apply bg-bg-page text-brand-navy font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Чистый, премиальный фон без "обоев" */
+    background-color: var(--color-bg-page);
+    /* Добавим едва уловимый градиент, чтобы фон не казался плоским */
+    background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 60%);
   }
+
   ::selection {
     background: rgba(0, 101, 132, 0.15);
     color: #002845;

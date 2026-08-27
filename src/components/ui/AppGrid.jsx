@@ -42,9 +42,9 @@ const apps = [
 
 export default function AppGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto w-full">
-      {apps.map((app) => (
-        <AppCard key={app.id} app={app} />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+      {apps.map((app, index) => (
+        <AppCard key={app.id} app={app} index={index} />
       ))}
     </div>
   );
