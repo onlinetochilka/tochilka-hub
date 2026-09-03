@@ -2,6 +2,23 @@ import { useState } from 'react';
 import { X, Mail, Lock } from 'lucide-react';
 import api from '../../utils/apiClient';
 
+const MIN_PASSWORD_LENGTH = 6;
+
+const ERROR_MAP = {
+  'failed to create record': 'Пользователь с таким email уже существует',
+  'ошибка валидации': 'Проверьте правильность введённых данных',
+  'invalid credentials': 'Неверный email или пароль',
+  'too many requests': 'Слишком много попыток. Подождите немного.',
+};
+
+function friendlyError(msg) {
+  if (!msg) return 'Произошла ошибка. Попробуйте позже.';
+  for (const [key, value] of Object.entries(ERROR_MAP)) {
+    if (msg.toLowerCase().includes(key.toLowerCase())) return value;
+  }
+  return msg;
+}
+
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -14,18 +31,31 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Client-side validation
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setError('Введите email');
+      return;
+    }
+
+    if (!isLogin && password.length < MIN_PASSWORD_LENGTH) {
+      setError(`Пароль должен быть не менее ${MIN_PASSWORD_LENGTH} символов`);
+      return;
+    }
+
     setLoading(true);
 
     try {
       if (isLogin) {
-        await api.post('/auth/login', { email, password });
+        await api.post('/auth/login', { email: trimmedEmail, password });
       } else {
-        await api.post('/auth/register', { email, password, passwordConfirm: password });
+        await api.post('/auth/register', { email: trimmedEmail, password, passwordConfirm: password });
       }
       onLoginSuccess();
       onClose();
     } catch (err) {
-      setError(err.message || 'Произошла ошибка');
+      setError(friendlyError(err.message));
     } finally {
       setLoading(false);
     }
@@ -80,6 +110,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 placeholder="••••••••"
               />
             </div>
+            {!isLogin && (
+              <p className="mt-1.5 text-xs text-brand-navy/40">Минимум {MIN_PASSWORD_LENGTH} символов</p>
+            )}
           </div>
 
           <button
