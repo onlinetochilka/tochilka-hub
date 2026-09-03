@@ -1,4 +1,4 @@
-﻿const BASE_URL = '/api/v2/exams';
+const BASE_URL = '/api/v2';
 
 async function request(method, path, body = null) {
   const url = `${BASE_URL}${path}`;
