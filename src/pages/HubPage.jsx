@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import FloatingIcons from "../components/ui/FloatingIcons";
-import GlassGear from "../components/GlassGear";
 import Navbar from "../components/ui/Navbar";
 import AppGrid from "../components/ui/AppGrid";
 
@@ -25,55 +24,37 @@ function useReveal() {
   return ref;
 }
 
-function Hero() {
+function CompactHero() {
   return (
-    <section className="relative w-full max-w-5xl mx-auto px-6 pt-32 pb-20 md:pt-48 md:pb-28 text-center flex flex-col items-center">
-      
-      {/* Huge 3D Gear spinning subtly in the background behind the text */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none -z-10 translate-y-[-5%]">
-        <GlassGear className="w-[800px] h-[800px] md:w-[1200px] md:h-[1200px] blur-[1px]" />
-      </div>
-
-      <div className="reveal relative z-10">
-        {/* Pill Label */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 text-sm font-bold text-brand-teal tracking-wide bg-white/70 backdrop-blur-md">
-          <span className="w-2 h-2 rounded-full bg-brand-teal animate-pulse" />
-          ПЕРЕДОВАЯ ОБРАЗОВАТЕЛЬНАЯ ЭКОСИСТЕМА
+    <section className="relative w-full max-w-7xl mx-auto px-6 pt-28 pb-8 md:pt-32 md:pb-10">
+      <div className="reveal flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-navy mb-3 tracking-tight leading-[1.1]">
+            Ваши инструменты
+          </h1>
+          <p className="text-lg md:text-xl text-brand-navy/50 font-medium max-w-xl">
+            Единая платформа полезных инструментов для образования. Выберите инструмент для работы.
+          </p>
         </div>
         
-        {/* Main Title */}
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-brand-navy mb-8 tracking-tight leading-[1.1]">
-          Всё для работы и учебы <br/>
-          <span className="text-brand-teal">в одном месте</span>
-        </h1>
-
-        {/* Cursive Subtitle */}
-        <h2 
-          className="text-4xl sm:text-6xl text-brand-crimson mb-10"
-          style={{ fontFamily: "var(--font-family-cursive)" }}
-        >
-          Сделаем острыми детские умы
-        </h2>
-        
-        {/* Paragraph */}
-        <p className="text-xl md:text-2xl text-brand-navy/60 max-w-2xl mx-auto font-medium leading-relaxed mb-10">
-          Единая платформа полезных инструментов. Управляйте расписанием, создавайте учебные материалы и экономьте время.
-        </p>
+        {/* Декоративный крутящийся логотип */}
+        <div className="hidden md:block flex-shrink-0 ml-8">
+          <img
+            src="/logo.svg"
+            alt=""
+            className="w-20 h-20 lg:w-24 lg:h-24 opacity-20 animate-[spin_30s_linear_infinite]"
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </section>
   );
 }
 
-function Ecosystem() {
+function ToolsSection() {
   return (
-    <section id="ecosystem" className="relative z-10 w-full px-6 py-12 md:py-20 flex justify-center bg-white/40 backdrop-blur-sm border-t border-brand-navy/[0.04]">
+    <section className="relative z-10 w-full px-6 pb-12 md:pb-20 flex justify-center">
       <div className="reveal w-full max-w-7xl mx-auto">
-        <div className="flex flex-col items-center mb-16 text-center">
-            <h3 className="text-3xl font-extrabold text-brand-navy mb-4">
-              Наши инструменты
-            </h3>
-            <div className="w-16 h-1 bg-brand-teal rounded-full" />
-        </div>
         <AppGrid />
       </div>
     </section>
@@ -116,8 +97,8 @@ export default function HubPage() {
 
       {/* Content */}
       <main className="flex-1 relative z-10">
-        <Hero />
-        <Ecosystem />
+        <CompactHero />
+        <ToolsSection />
       </main>
 
       <Footer />

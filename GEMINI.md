@@ -5,7 +5,7 @@
 
 ## Стек
 - **Frontend:** React + Vite + Tailwind + Three.js (3D-элементы) + Framer Motion
-- **Backend API:** Node.js (tochilka-api) → https://exams.tochilka.app/api/v2
+- **Backend API:** Node.js (tochilka-api) → https://tochilka.app/api/v2
 - **Авторизация:** Cookie-based (httpOnly). PocketBase SDK **НЕ ИСПОЛЬЗУЕТСЯ**.
 
 ## Структура

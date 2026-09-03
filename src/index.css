@@ -1,15 +1,12 @@
-/* ─── Google Font ─── */
-/* Удалили импорт Inter из CSS, так как мы подключили его в HTML вместе с Great Vibes */
-
 @import "tailwindcss";
 
 /* ─── Design Tokens ─── */
 @theme {
   --color-brand-navy: #002845;
   --color-brand-teal: #006584;
-  --color-brand-crimson: #B71234;
-  --color-brand-crimson-dark: #9a0f2b;
-  --color-bg-page: #f5f7f9;
+  --color-brand-crimson: #E84060;
+  --color-brand-crimson-dark: #C53550;
+  --color-bg-page: #FAFBFC;
   --color-bg-card: #ffffff;
   --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-family-cursive: 'Great Vibes', cursive;
@@ -24,10 +21,6 @@
     @apply bg-bg-page text-brand-navy font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Чистый, премиальный фон без "обоев" */
-    background-color: var(--color-bg-page);
-    /* Добавим едва уловимый градиент, чтобы фон не казался плоским */
-    background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 60%);
   }
 
   ::selection {
@@ -65,7 +58,7 @@
 
   /* ─── Glassmorphism ─── */
   .glass-panel {
-    @apply bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_0_rgba(0,40,69,0.05)];
+    @apply bg-white/60 backdrop-blur-xl border border-white/70 shadow-[0_8px_32px_0_rgba(0,40,69,0.05)];
   }
   
   .glass-card {

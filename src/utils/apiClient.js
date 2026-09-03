@@ -23,8 +23,9 @@ async function request(method, path, body = null) {
 }
 
 const api = {
-  get:  (path) => request('GET', path),
-  post: (path, body) => request('POST', path, body),
+  get:   (path) => request('GET', path),
+  post:  (path, body) => request('POST', path, body),
+  patch: (path, body) => request('PATCH', path, body),
 };
 
 export default api;

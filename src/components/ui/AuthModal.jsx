@@ -62,13 +62,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/20 backdrop-blur-sm">
-      <div className="glass-card relative w-full max-w-md p-8 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/30 backdrop-blur-sm">
+      <div className="bg-white relative w-full max-w-md p-8 shadow-2xl rounded-3xl border border-brand-navy/[0.05]">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-brand-navy/50 hover:text-brand-navy transition-colors"
+          className="absolute top-4 right-4 text-brand-navy/30 hover:text-brand-navy transition-colors bg-brand-navy/5 hover:bg-brand-navy/10 p-1.5 rounded-full"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
 
         <h2 className="text-2xl font-bold text-brand-navy mb-6 text-center">
@@ -76,14 +76,14 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
         </h2>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-brand-crimson/10 border border-brand-crimson/20 text-brand-crimson text-sm">
+          <div className="mb-4 p-3 rounded-xl bg-brand-crimson/10 border border-brand-crimson/20 text-brand-crimson text-sm font-medium text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-brand-navy/70 mb-1">Email</label>
+            <label className="block text-sm font-bold text-brand-navy/70 mb-1.5">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-navy/40" size={18} />
               <input
@@ -91,14 +91,14 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/50 border border-white/60 focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-2.5 pl-10 pr-4 text-brand-navy outline-none transition-all"
+                className="w-full bg-bg-page border border-brand-navy/[0.06] focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-2.5 pl-10 pr-4 text-brand-navy outline-none transition-all font-medium"
                 placeholder="ваша@почта.ru"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-brand-navy/70 mb-1">Пароль</label>
+            <label className="block text-sm font-bold text-brand-navy/70 mb-1.5">Пароль</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-navy/40" size={18} />
               <input
@@ -106,12 +106,12 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/50 border border-white/60 focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-2.5 pl-10 pr-4 text-brand-navy outline-none transition-all"
+                className="w-full bg-bg-page border border-brand-navy/[0.06] focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-2.5 pl-10 pr-4 text-brand-navy outline-none transition-all font-medium"
                 placeholder="••••••••"
               />
             </div>
             {!isLogin && (
-              <p className="mt-1.5 text-xs text-brand-navy/40">Минимум {MIN_PASSWORD_LENGTH} символов</p>
+              <p className="mt-1.5 text-xs text-brand-navy/40 font-medium">Минимум {MIN_PASSWORD_LENGTH} символов</p>
             )}
           </div>
 

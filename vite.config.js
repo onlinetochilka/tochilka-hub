@@ -8,4 +8,14 @@ export default defineConfig({
     tailwindcss(),
     react()
   ],
+  server: {
+    proxy: {
+      '/api/v2': {
+        target: 'https://tochilka.app',
+        changeOrigin: true,
+        secure: true,
+        cookieDomainRewrite: 'localhost'
+      }
+    }
+  }
 })

@@ -1,22 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { LogOut, UserCircle } from 'lucide-react';
-import api from '../../utils/apiClient';
+import { useAuth } from '../../contexts/AuthContext';
 import AuthModal from './AuthModal';
 
 export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    api.get('/auth/me')
-      .then((data) => setUser(data.user))
-      .catch(() => setUser(null));
-  }, []);
-
-  const handleLogout = async () => {
-    await api.post('/auth/logout').catch(() => {});
-    setUser(null);
-  };
+  const { user, logout, refreshUser } = useAuth();
 
   return (
     <>
@@ -27,7 +16,7 @@ export default function Navbar() {
               <img
                 src="/logo.svg"
                 alt="Точилка"
-                className="w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-105"
+                className="w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-105 animate-[spin_30s_linear_infinite]"
               />
               <span className="font-extrabold text-lg md:text-xl text-brand-teal tracking-tight">
                 ТОЧИЛКА
@@ -42,7 +31,7 @@ export default function Navbar() {
                     <span>{user.email}</span>
                   </div>
                   <button
-                    onClick={handleLogout}
+                    onClick={logout}
                     className="p-2 rounded-full hover:bg-brand-crimson/10 text-brand-crimson transition-colors"
                     title="Выйти"
                   >
@@ -65,11 +54,7 @@ export default function Navbar() {
       <AuthModal 
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
-        onLoginSuccess={() => {
-          api.get('/auth/me')
-            .then((data) => setUser(data.user))
-            .catch(() => {});
-        }}
+        onLoginSuccess={refreshUser}
       />
     </>
   );
