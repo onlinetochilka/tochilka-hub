@@ -1,44 +1,69 @@
 import { useState } from 'react';
-import { User, GraduationCap, BookOpen, MapPin, ArrowRight, Check } from 'lucide-react';
+import { User, BookOpen, MapPin, ArrowRight, Check, Plus, X } from 'lucide-react';
 import api from '../../utils/apiClient';
 import { useAuth } from '../../contexts/AuthContext';
 
 const ROLES = [
   { value: 'teacher', label: 'Школьный учитель', emoji: '🏫' },
   { value: 'tutor', label: 'Репетитор', emoji: '📚' },
+  { value: 'methodist', label: 'Методист', emoji: '📋' },
+  { value: 'admin', label: 'Завуч / директор', emoji: '🎓' },
   { value: 'parent', label: 'Родитель', emoji: '👨‍👩‍👧' },
-  { value: 'student', label: 'Ученик / студент', emoji: '🎓' },
+  { value: 'student', label: 'Ученик / студент', emoji: '✏️' },
   { value: 'other', label: 'Другое', emoji: '✨' },
 ];
 
 const SUBJECTS = [
-  'Математика', 'Русский язык', 'Литература', 'Английский язык',
-  'Физика', 'Химия', 'Биология', 'История',
-  'Обществознание', 'География', 'Информатика',
-  'Начальные классы', 'Музыка', 'ИЗО',
+  'Математика', 'Алгебра', 'Геометрия',
+  'Русский язык', 'Литература',
+  'Английский язык', 'Немецкий язык', 'Французский язык', 'Китайский язык',
+  'Физика', 'Химия', 'Биология',
+  'История', 'Обществознание', 'Право',
+  'География', 'Информатика', 'Экономика',
+  'Начальные классы', 'Окружающий мир',
+  'Музыка', 'ИЗО', 'Технология', 'Физкультура',
+  'ОБЖ', 'Астрономия',
 ];
 
 const TOTAL_STEPS = 3;
 
 export default function OnboardingModal() {
-  const { refreshUser } = useAuth();
-  const [step, setStep] = useState(1);
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('');
+  const { user, refreshUser } = useAuth();
+  const hasName = Boolean(user?.name);
+  const [step, setStep] = useState(hasName ? 2 : 1);
+  const [name, setName] = useState(user?.name || '');
+  const [roles, setRoles] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [customSubject, setCustomSubject] = useState('');
   const [city, setCity] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const isPedagog = roles.some((r) => ['teacher', 'tutor', 'methodist', 'admin'].includes(r));
+
   const canNext =
     (step === 1 && name.trim().length >= 2) ||
-    (step === 2 && role) ||
+    (step === 2 && roles.length > 0) ||
     step === 3;
+
+  const toggleRole = (value) => {
+    setRoles((prev) =>
+      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value]
+    );
+  };
 
   const toggleSubject = (subj) => {
     setSubjects((prev) =>
       prev.includes(subj) ? prev.filter((s) => s !== subj) : [...prev, subj]
     );
+  };
+
+  const addCustomSubject = () => {
+    const trimmed = customSubject.trim();
+    if (trimmed && !subjects.includes(trimmed)) {
+      setSubjects((prev) => [...prev, trimmed]);
+      setCustomSubject('');
+    }
   };
 
   const handleSubmit = async () => {
@@ -47,7 +72,7 @@ export default function OnboardingModal() {
     try {
       await api.patch('/auth/profile', {
         name: name.trim(),
-        role,
+        roles,
         subjects,
         city: city.trim(),
       });
@@ -66,26 +91,24 @@ export default function OnboardingModal() {
     }
   };
 
-  const showSubjects = role === 'teacher' || role === 'tutor';
-
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-brand-navy/40 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-brand-navy/[0.05] overflow-hidden">
+      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-brand-navy/[0.05] overflow-hidden max-h-[90vh] flex flex-col">
         {/* Progress Bar */}
-        <div className="h-1.5 bg-brand-navy/[0.04]">
+        <div className="h-1.5 bg-brand-navy/[0.04] flex-shrink-0">
           <div
             className="h-full bg-brand-teal transition-all duration-500 ease-out rounded-full"
             style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
           />
         </div>
 
-        <div className="p-8">
+        <div className="p-8 overflow-y-auto">
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-brand-navy mb-2">
               {step === 1 && 'Давайте познакомимся!'}
-              {step === 2 && 'Кем вы работаете?'}
-              {step === 3 && (showSubjects ? 'Ещё пара деталей' : 'Откуда вы?')}
+              {step === 2 && 'Что вас описывает?'}
+              {step === 3 && (isPedagog ? 'Ещё пара деталей' : 'Откуда вы?')}
             </h2>
             <p className="text-sm text-brand-navy/50 font-medium">
               Шаг {step} из {TOTAL_STEPS}
@@ -121,52 +144,60 @@ export default function OnboardingModal() {
             </div>
           )}
 
-          {/* ─── Step 2: Role ─── */}
+          {/* ─── Step 2: Roles (multi-select) ─── */}
           {step === 2 && (
-            <div className="grid gap-2.5">
-              {ROLES.map((r) => (
-                <button
-                  key={r.value}
-                  onClick={() => setRole(r.value)}
-                  className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                    role === r.value
-                      ? 'border-brand-teal bg-brand-teal/5 shadow-sm'
-                      : 'border-brand-navy/[0.06] bg-white hover:border-brand-navy/[0.12] hover:bg-bg-page'
-                  }`}
-                >
-                  <span className="text-2xl">{r.emoji}</span>
-                  <span
-                    className={`font-semibold text-sm ${
-                      role === r.value ? 'text-brand-teal' : 'text-brand-navy'
-                    }`}
-                  >
-                    {r.label}
-                  </span>
-                  {role === r.value && (
-                    <Check size={18} className="ml-auto text-brand-teal" />
-                  )}
-                </button>
-              ))}
+            <div>
+              <p className="text-xs text-brand-navy/40 font-medium mb-3 text-center">
+                Можно выбрать несколько
+              </p>
+              <div className="grid gap-2.5">
+                {ROLES.map((r) => {
+                  const selected = roles.includes(r.value);
+                  return (
+                    <button
+                      key={r.value}
+                      onClick={() => toggleRole(r.value)}
+                      className={`flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                        selected
+                          ? 'border-brand-teal bg-brand-teal/5 shadow-sm'
+                          : 'border-brand-navy/[0.06] bg-white hover:border-brand-navy/[0.12] hover:bg-bg-page'
+                      }`}
+                    >
+                      <span className="text-2xl">{r.emoji}</span>
+                      <span
+                        className={`font-semibold text-sm flex-1 ${
+                          selected ? 'text-brand-teal' : 'text-brand-navy'
+                        }`}
+                      >
+                        {r.label}
+                      </span>
+                      {selected && (
+                        <Check size={18} className="text-brand-teal flex-shrink-0" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
           {/* ─── Step 3: Subjects + City ─── */}
           {step === 3 && (
             <div className="space-y-6">
-              {showSubjects && (
+              {isPedagog && (
                 <div>
                   <label className="block text-sm font-bold text-brand-navy/70 mb-3">
                     <BookOpen size={16} className="inline mr-1.5 -mt-0.5" />
                     Какие предметы вы ведёте?
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {SUBJECTS.map((subj) => {
                       const selected = subjects.includes(subj);
                       return (
                         <button
                           key={subj}
                           onClick={() => toggleSubject(subj)}
-                          className={`px-3.5 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
                             selected
                               ? 'bg-brand-teal text-white border-brand-teal shadow-sm'
                               : 'bg-white text-brand-navy/60 border-brand-navy/[0.08] hover:border-brand-teal/40 hover:text-brand-navy'
@@ -176,6 +207,37 @@ export default function OnboardingModal() {
                         </button>
                       );
                     })}
+                    {/* Custom subjects that user added */}
+                    {subjects
+                      .filter((s) => !SUBJECTS.includes(s))
+                      .map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => toggleSubject(s)}
+                          className="px-3 py-1.5 rounded-full text-xs font-medium bg-brand-teal text-white border border-brand-teal shadow-sm flex items-center gap-1"
+                        >
+                          {s}
+                          <X size={12} />
+                        </button>
+                      ))}
+                  </div>
+                  {/* Add custom subject */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={customSubject}
+                      onChange={(e) => setCustomSubject(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomSubject())}
+                      placeholder="Свой предмет..."
+                      className="flex-1 bg-bg-page border border-brand-navy/[0.06] focus:border-brand-teal rounded-lg py-2 px-3 text-sm text-brand-navy font-medium outline-none transition-all"
+                    />
+                    <button
+                      onClick={addCustomSubject}
+                      disabled={!customSubject.trim()}
+                      className="bg-brand-teal/10 text-brand-teal p-2 rounded-lg hover:bg-brand-teal/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <Plus size={18} />
+                    </button>
                   </div>
                 </div>
               )}
@@ -198,7 +260,7 @@ export default function OnboardingModal() {
 
           {/* ─── Navigation ─── */}
           <div className="flex items-center justify-between mt-8 gap-4">
-            {step > 1 ? (
+            {step > 1 && !(step === 2 && hasName) ? (
               <button
                 onClick={() => setStep(step - 1)}
                 disabled={loading}

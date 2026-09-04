@@ -70,8 +70,8 @@ export default function AppShell() {
         onLoginSuccess={refreshUser}
       />
 
-      {/* Онбординг — показываем если пользователь авторизован, но не заполнил имя */}
-      {user && !user.name && <OnboardingModal />}
+      {/* Онбординг — показываем если пользователь авторизован, но не прошёл онбординг */}
+      {user && !user.onboarding_completed && <OnboardingModal />}
     </div>
   );
 }
