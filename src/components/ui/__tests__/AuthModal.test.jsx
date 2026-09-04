@@ -57,7 +57,7 @@ describe('AuthModal Stress Tests', () => {
     expect(api.post).toHaveBeenCalledTimes(1); // Button should be disabled after first click
     
     await waitFor(() => {
-      expect(screen.getByText(/Network Error/i)).toBeInTheDocument();
+      expect(screen.getByText('Произошла ошибка. Попробуйте позже.')).toBeInTheDocument();
     });
     
     expect(submitBtn).not.toBeDisabled(); // Should be re-enabled after failure
@@ -71,6 +71,9 @@ describe('AuthModal Stress Tests', () => {
     
     // Switch to register
     fireEvent.click(screen.getByRole('button', { name: 'Зарегистрироваться' }));
+    
+    // Fill name so HTML5 required doesn't block form submission
+    await userEvent.type(screen.getByPlaceholderText('Ваше имя'), 'Тест');
     
     // Trying to submit with short password should show error without hitting API
     fireEvent.click(screen.getByRole('button', { name: /Создать аккаунт/i }));

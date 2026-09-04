@@ -3,6 +3,7 @@ import { X, Mail, Lock, User } from 'lucide-react';
 import api from '../../utils/apiClient';
 
 const MIN_PASSWORD_LENGTH = 6;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const ERROR_MAP = {
   'failed to create record': 'Пользователь с таким email уже существует',
@@ -16,7 +17,7 @@ function friendlyError(msg) {
   for (const [key, value] of Object.entries(ERROR_MAP)) {
     if (msg.toLowerCase().includes(key.toLowerCase())) return value;
   }
-  return msg;
+  return 'Произошла ошибка. Попробуйте позже.';
 }
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
@@ -41,12 +42,18 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setError('Введите корректный email');
+      return;
+    }
+
     if (!isLogin && password.length < MIN_PASSWORD_LENGTH) {
       setError(`Пароль должен быть не менее ${MIN_PASSWORD_LENGTH} символов`);
       return;
     }
 
-    if (!isLogin && !name.trim()) {
+    const sanitizedName = name.trim().replace(/<[^>]*>/g, '');
+    if (!isLogin && !sanitizedName) {
       setError('Укажите, как к вам обращаться');
       return;
     }
@@ -62,9 +69,9 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       if (isLogin) {
         await api.post('/auth/login', { email: trimmedEmail, password });
       } else {
-        await api.post('/auth/register', { email: trimmedEmail, password, name: name.trim() });
+        await api.post('/auth/register', { email: trimmedEmail, password, name: sanitizedName });
       }
-      onLoginSuccess();
+      onLoginSuccess?.();
       onClose();
     } catch (err) {
       setError(friendlyError(err.message));
