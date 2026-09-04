@@ -80,11 +80,13 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      <AuthModal
-        isOpen={authOpen}
-        onClose={() => setAuthOpen(false)}
-        onLoginSuccess={refreshUser}
-      />
+      {authOpen && (
+        <AuthModal
+          isOpen={authOpen}
+          onClose={() => setAuthOpen(false)}
+          onLoginSuccess={refreshUser}
+        />
+      )}
     </div>
   );
 }

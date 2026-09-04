@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Mail, Lock } from 'lucide-react';
+import { X, Mail, Lock, User } from 'lucide-react';
 import api from '../../utils/apiClient';
 
 const MIN_PASSWORD_LENGTH = 6;
@@ -23,6 +23,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -44,13 +46,23 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
+    if (!isLogin && !name.trim()) {
+      setError('Укажите, как к вам обращаться');
+      return;
+    }
+
+    if (!isLogin && !agreed) {
+      setError('Необходимо принять условия использования');
+      return;
+    }
+
     setLoading(true);
 
     try {
       if (isLogin) {
         await api.post('/auth/login', { email: trimmedEmail, password });
       } else {
-        await api.post('/auth/register', { email: trimmedEmail, password, passwordConfirm: password });
+        await api.post('/auth/register', { email: trimmedEmail, password, name: name.trim() });
       }
       onLoginSuccess();
       onClose();
@@ -82,6 +94,23 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div>
+              <label className="block text-sm font-bold text-brand-navy/70 mb-1.5">Как к вам обращаться?</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-navy/40" size={18} />
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-bg-page border border-brand-navy/[0.06] focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-2.5 pl-10 pr-4 text-brand-navy outline-none transition-all font-medium"
+                  placeholder="Ваше имя"
+                />
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-bold text-brand-navy/70 mb-1.5">Email</label>
             <div className="relative">
@@ -114,6 +143,23 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
               <p className="mt-1.5 text-xs text-brand-navy/40 font-medium">Минимум {MIN_PASSWORD_LENGTH} символов</p>
             )}
           </div>
+
+          {!isLogin && (
+            <label className="flex items-start gap-2.5 cursor-pointer mt-2">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-brand-navy/20 text-brand-teal focus:ring-brand-teal/20"
+              />
+              <span className="text-xs text-brand-navy/50 leading-relaxed">
+                Я принимаю{' '}
+                <a href="/terms" target="_blank" className="text-brand-teal hover:underline">условия использования</a>
+                {' '}и{' '}
+                <a href="/privacy" target="_blank" className="text-brand-teal hover:underline">политику конфиденциальности</a>
+              </span>
+            </label>
+          )}
 
           <button
             type="submit"

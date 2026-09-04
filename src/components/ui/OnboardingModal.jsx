@@ -30,56 +30,65 @@ const TOTAL_STEPS = 3;
 export default function OnboardingModal() {
   const { user, refreshUser } = useAuth();
   const hasName = Boolean(user?.name);
+  
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    roles: [],
+    subjects: [],
+    customSubject: '',
+    city: '',
+  });
   const [step, setStep] = useState(hasName ? 2 : 1);
-  const [name, setName] = useState(user?.name || '');
-  const [roles, setRoles] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-  const [customSubject, setCustomSubject] = useState('');
-  const [city, setCity] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [status, setStatus] = useState({ loading: false, error: '' });
 
-  const isPedagog = roles.some((r) => ['teacher', 'tutor', 'methodist', 'admin'].includes(r));
+  const isPedagog = formData.roles.some((r) => ['teacher', 'tutor', 'methodist', 'admin'].includes(r));
 
   const canNext =
-    (step === 1 && name.trim().length >= 2) ||
-    (step === 2 && roles.length > 0) ||
+    (step === 1 && formData.name.trim().length >= 2) ||
+    (step === 2 && formData.roles.length > 0) ||
     step === 3;
 
   const toggleRole = (value) => {
-    setRoles((prev) =>
-      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value]
-    );
+    setFormData((prev) => ({
+      ...prev,
+      roles: prev.roles.includes(value)
+        ? prev.roles.filter((r) => r !== value)
+        : [...prev.roles, value],
+    }));
   };
 
   const toggleSubject = (subj) => {
-    setSubjects((prev) =>
-      prev.includes(subj) ? prev.filter((s) => s !== subj) : [...prev, subj]
-    );
+    setFormData((prev) => ({
+      ...prev,
+      subjects: prev.subjects.includes(subj)
+        ? prev.subjects.filter((s) => s !== subj)
+        : [...prev.subjects, subj],
+    }));
   };
 
   const addCustomSubject = () => {
-    const trimmed = customSubject.trim();
-    if (trimmed && !subjects.includes(trimmed)) {
-      setSubjects((prev) => [...prev, trimmed]);
-      setCustomSubject('');
+    const trimmed = formData.customSubject.trim();
+    if (trimmed && !formData.subjects.includes(trimmed)) {
+      setFormData((prev) => ({
+        ...prev,
+        subjects: [...prev.subjects, trimmed],
+        customSubject: '',
+      }));
     }
   };
 
   const handleSubmit = async () => {
-    setError('');
-    setLoading(true);
+    setStatus({ loading: true, error: '' });
     try {
       await api.patch('/auth/profile', {
-        name: name.trim(),
-        roles,
-        subjects,
-        city: city.trim(),
+        name: formData.name.trim(),
+        roles: formData.roles,
+        subjects: formData.subjects,
+        city: formData.city.trim(),
       });
       await refreshUser();
     } catch (err) {
-      setError(err.message || 'Произошла ошибка');
-      setLoading(false);
+      setStatus({ loading: false, error: err.message || 'Произошла ошибка' });
     }
   };
 
@@ -115,9 +124,9 @@ export default function OnboardingModal() {
             </p>
           </div>
 
-          {error && (
+          {status.error && (
             <div className="mb-6 p-3 rounded-xl bg-brand-crimson/10 border border-brand-crimson/20 text-brand-crimson text-sm font-medium text-center">
-              {error}
+              {status.error}
             </div>
           )}
 
@@ -131,8 +140,8 @@ export default function OnboardingModal() {
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-navy/30" size={20} />
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Анна Ивановна"
                   autoFocus
                   className="w-full bg-bg-page border border-brand-navy/[0.08] focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-3.5 pl-11 pr-4 text-brand-navy font-medium outline-none transition-all text-lg"
@@ -152,7 +161,7 @@ export default function OnboardingModal() {
               </p>
               <div className="grid gap-2.5">
                 {ROLES.map((r) => {
-                  const selected = roles.includes(r.value);
+                  const selected = formData.roles.includes(r.value);
                   return (
                     <button
                       key={r.value}
@@ -192,7 +201,7 @@ export default function OnboardingModal() {
                   </label>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {SUBJECTS.map((subj) => {
-                      const selected = subjects.includes(subj);
+                      const selected = formData.subjects.includes(subj);
                       return (
                         <button
                           key={subj}
@@ -208,7 +217,7 @@ export default function OnboardingModal() {
                       );
                     })}
                     {/* Custom subjects that user added */}
-                    {subjects
+                    {formData.subjects
                       .filter((s) => !SUBJECTS.includes(s))
                       .map((s) => (
                         <button
@@ -225,15 +234,15 @@ export default function OnboardingModal() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={customSubject}
-                      onChange={(e) => setCustomSubject(e.target.value)}
+                      value={formData.customSubject}
+                      onChange={(e) => setFormData(prev => ({ ...prev, customSubject: e.target.value }))}
                       onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomSubject())}
                       placeholder="Свой предмет..."
                       className="flex-1 bg-bg-page border border-brand-navy/[0.06] focus:border-brand-teal rounded-lg py-2 px-3 text-sm text-brand-navy font-medium outline-none transition-all"
                     />
                     <button
                       onClick={addCustomSubject}
-                      disabled={!customSubject.trim()}
+                      disabled={!formData.customSubject.trim()}
                       className="bg-brand-teal/10 text-brand-teal p-2 rounded-lg hover:bg-brand-teal/20 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                       <Plus size={18} />
@@ -249,8 +258,8 @@ export default function OnboardingModal() {
                 </label>
                 <input
                   type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  value={formData.city}
+                  onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
                   placeholder="Москва"
                   className="w-full bg-bg-page border border-brand-navy/[0.08] focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20 rounded-xl py-3 px-4 text-brand-navy font-medium outline-none transition-all"
                 />
@@ -263,7 +272,7 @@ export default function OnboardingModal() {
             {step > 1 && !(step === 2 && hasName) ? (
               <button
                 onClick={() => setStep(step - 1)}
-                disabled={loading}
+                disabled={status.loading}
                 className="text-sm font-bold text-brand-navy/40 hover:text-brand-navy transition-colors disabled:opacity-50"
               >
                 ← Назад
@@ -274,15 +283,15 @@ export default function OnboardingModal() {
 
             <button
               onClick={handleNext}
-              disabled={!canNext || loading}
+              disabled={!canNext || status.loading}
               className="bg-brand-teal hover:bg-brand-teal/90 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
-              {loading
+              {status.loading
                 ? 'Сохраняем...'
                 : step === TOTAL_STEPS
                   ? 'Начать работу'
                   : 'Далее'}
-              {!loading && step < TOTAL_STEPS && <ArrowRight size={16} />}
+              {!status.loading && step < TOTAL_STEPS && <ArrowRight size={16} />}
             </button>
           </div>
         </div>

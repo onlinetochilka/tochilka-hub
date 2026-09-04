@@ -64,11 +64,13 @@ export default function AppShell() {
         </main>
       </div>
 
-      <AuthModal
-        isOpen={authOpen}
-        onClose={() => setAuthOpen(false)}
-        onLoginSuccess={refreshUser}
-      />
+      {authOpen && (
+        <AuthModal
+          isOpen={authOpen}
+          onClose={() => setAuthOpen(false)}
+          onLoginSuccess={refreshUser}
+        />
+      )}
 
       {/* Онбординг — показываем если пользователь авторизован, но не прошёл онбординг */}
       {user && !user.onboarding_completed && <OnboardingModal />}

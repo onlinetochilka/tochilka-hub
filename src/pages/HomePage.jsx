@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X, Target, Clock, Shield, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -41,12 +41,8 @@ function getGreeting() {
 
 export default function HomePage() {
   const { user } = useAuth();
-  const [greeting, setGreeting] = useState('');
+  const [greeting] = useState(() => getGreeting());
   const [showBanner, setShowBanner] = useState(true);
-
-  useEffect(() => {
-    setGreeting(getGreeting());
-  }, []);
 
   return (
     <div className="flex-1 flex flex-col px-6 lg:px-10 py-6 lg:py-8 w-full">

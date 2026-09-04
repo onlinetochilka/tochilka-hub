@@ -6,10 +6,6 @@ import { useAuth } from '../../contexts/AuthContext';
 export default function AppDetailPanel({ app, onClose }) {
   const { user } = useAuth();
 
-  if (!app) return null;
-
-  const { name, fullDescription, features, icon: Icon, url, color } = app;
-
   // Закрытие по Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -21,9 +17,14 @@ export default function AppDetailPanel({ app, onClose }) {
 
   // Блокировка скролла фона
   useEffect(() => {
+    if (!app) return;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
-  }, []);
+  }, [app]);
+
+  if (!app) return null;
+
+  const { name, fullDescription, features, icon: Icon, url, color } = app;
 
   return (
     <AnimatePresence>
