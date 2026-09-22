@@ -5,7 +5,7 @@ async function request(method, path, body = null) {
   const options = {
     method,
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
   };
   if (body && method !== 'GET') {
     options.body = JSON.stringify(body);
